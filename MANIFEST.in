@@ -1,0 +1,2 @@
+recursive-include miniexplorer *
+include README.md
