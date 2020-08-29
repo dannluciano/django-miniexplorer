@@ -8,21 +8,33 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Query',
+            name="Query",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True, verbose_name='uuid')),
-                ('title', models.CharField(max_length=50, unique=True, verbose_name='title')),
-                ('sql', models.TextField(verbose_name='SQL')),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                        verbose_name="uuid",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=50, unique=True, verbose_name="title"),
+                ),
+                ("sql", models.TextField(verbose_name="SQL")),
             ],
             options={
-                'verbose_name': 'Query',
-                'verbose_name_plural': 'Queries',
-                'managed': True,
+                "verbose_name": "Query",
+                "verbose_name_plural": "Queries",
+                "managed": True,
             },
         ),
     ]

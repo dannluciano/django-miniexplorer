@@ -1,36 +1,32 @@
 import uuid
 
 from django.db import models
+from django.utils.translation import gettext as _
 
 from .utils import raw_sql
+
 
 class Query(models.Model):
 
     uuid = models.UUIDField(
-        "uuid", 
+        _("uuid"),
         editable=False,
         primary_key=True,
-        unique=True, 
-        default=uuid.uuid4, 
+        unique=True,
+        default=uuid.uuid4,
     )
 
-    title = models.CharField(
-        "title", 
-        max_length=50,
-        unique=True
-    )
+    title = models.CharField(_("title"), max_length=50, unique=True)
 
-    sql = models.TextField(
-        "SQL"
-    )
+    sql = models.TextField(_("SQL"))
 
     def __str__(self):
-        return f'{self.title}'
+        return f"{self.title}"
 
     def execute(self):
         return raw_sql(self.sql)
 
     class Meta:
         managed = True
-        verbose_name = 'Query'
-        verbose_name_plural = 'Queries'
+        verbose_name = _("Query")
+        verbose_name_plural = _("Queries")
