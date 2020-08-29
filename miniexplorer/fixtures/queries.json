@@ -1,0 +1,17 @@
+[{
+        "model": "miniexplorer.query",
+        "pk": "01815122-2963-4c78-8d65-dd4a8c8b61ea",
+        "fields": {
+            "title": "Number of Super Users",
+            "sql": "SELECT COUNT(*) as NUMBER_OF_SUPER_USERS FROM auth_user WHERE is_superuser = true;"
+        }
+    },
+    {
+        "model": "miniexplorer.query",
+        "pk": "bec8d49e-b8aa-4570-86e9-c76f79a57d87",
+        "fields": {
+            "title": "All Users",
+            "sql": "SELECT * FROM auth_user;"
+        }
+    }
+]
