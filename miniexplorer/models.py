@@ -28,7 +28,6 @@ class Query(models.Model):
         return f'{self.title}'
 
     def execute(self):
-        print(f'Running: {self.sql}')
         return raw_sql(self.sql)
 
     class Meta:

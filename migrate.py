@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# makemigrations.py
+# migrate.py
 
 from django.core.management import call_command
 from boot_django import boot_django
 
 boot_django()
-call_command("makemigrations", "miniexplorer")
+call_command("migrate", "miniexplorer")
