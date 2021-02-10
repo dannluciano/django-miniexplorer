@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext as _
 
-from .utils import raw_sql
+from .utils import raw_sql, clean_mutable_commands
 
 
 class Query(models.Model):
@@ -22,6 +22,10 @@ class Query(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+    def save(self, *args, **kwargs):
+        self.sql = clean_mutable_commands(self.sql)
+        super().save(*args, **kwargs)
 
     def execute(self):
         return raw_sql(self.sql)
