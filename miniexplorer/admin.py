@@ -33,9 +33,9 @@ class QueryAdmin(admin.ModelAdmin):
         )
 
     class Media:
-        css = {"all": ("codemirror/lib/codemirror.css",)}
+        css = {"all": ("https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.css",)}
         js = (
-            "codemirror/lib/codemirror.js",
-            "codemirror/mode/sql/sql.js",
+            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.js",
+            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/mode/sql/sql.min.js",
             "miniexplorer.js",
         )
