@@ -4,6 +4,14 @@ Mini SQL Explorer for Django Admin
 
 ![Screen Shot of Mini Explorer](./doc/screenshot.png)
 
+## Features
+
+- [x] SQL Explorer
+- [x] Only safe SQL queries 
+- [x] SQL querie formatting
+- [x] Show data base schema
+- [ ] Auto complete
+
 ## How to Install
 
 ```shell
@@ -17,14 +25,14 @@ Add `'miniexplorer'` in your installed apps Django project `settings.py`
 ```python
 # settings.py
 INSTALLED_APPS = [
+    "miniexplorer",
+    ...
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    ...
-    "miniexplorer",
 ]
 ```
 
