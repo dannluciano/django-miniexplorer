@@ -1,0 +1,35 @@
+<div class="column-layout">
+    <table id="database_schema" style="width: 100%;">
+        {% comment %} <thead>
+            <tr>
+                <th>Column Name</th>
+                <th>Column Type</th>
+            </tr>
+        </thead> {% endcomment %}
+        {% for table in db_schema %}
+            <tr style="background: #f9f9f9;">
+                <th>
+                    <strong>
+                        {{table.name}}
+                    </strong>
+                </th>
+                <th></th>
+            </tr>
+            {% for column in table.columns %}
+            <tr style="background: #fff;">
+                <td>
+                    {% if column.pk %}
+                        &#128273;
+                    {% endif %}
+                    <strong>
+                        {{column.name}}
+                    </strong>
+                </td>
+                <td>
+                    {{column.type}}
+                </td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+</div>
