@@ -29,7 +29,7 @@ def boot_django():
             os.path.join(BASE_DIR, "locale"),
         ],
         LANGUAGE_CODE="pt-BR",
-        # ROOT_URLCONF=os.path.join(BASE_DIR, "../sample_project/sample_project/urls"),
+        ROOT_URLCONF=os.path.join(BASE_DIR, "../sample_project/sample_project/urls"),
     )
 
     django.setup()
