@@ -61,7 +61,7 @@ class QueryAdmin(admin.ModelAdmin):
     class Media:
         css = {"all": (
             "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.css",
-            "style.css",
+            "miniexplorer.css",
         )}
         js = (
             "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.js",

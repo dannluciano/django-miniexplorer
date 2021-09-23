@@ -18,3 +18,7 @@
 .column-layout table {
     table-layout: fixed;
 }
+
+.table_name {
+    background-color: var(--primary) !important;
+}

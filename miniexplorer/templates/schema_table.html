@@ -1,13 +1,7 @@
 <div class="column-layout">
     <table id="database_schema" style="width: 100%;">
-        {% comment %} <thead>
-            <tr>
-                <th>Column Name</th>
-                <th>Column Type</th>
-            </tr>
-        </thead> {% endcomment %}
         {% for table in db_schema %}
-            <tr style="background: #f9f9f9;">
+            <tr class="table_name">
                 <th>
                     <strong>
                         {{table.name}}
@@ -16,7 +10,7 @@
                 <th></th>
             </tr>
             {% for column in table.columns %}
-            <tr style="background: #fff;">
+            <tr>
                 <td>
                     {% if column.pk %}
                         &#128273;
