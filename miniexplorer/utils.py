@@ -46,24 +46,27 @@ def clean_mutable_commands(sql):
 
 def get_database_schema():
     tables = []
-    with connection.cursor() as cursor:
-        tables_info = connection.introspection.get_table_list(cursor)
-        for table_info in tables_info:
-            table_name = table_info.name
-            columns = []
+    cursor = connection.cursor()
+    tables_info = connection.introspection.get_table_list(cursor)
+    for table_info in tables_info:
+        table_name = table_info.name
+        columns = []
+
+        primary_key = connection.introspection.get_primary_key_column(cursor, table_name)
             
-            table_description = connection.introspection.get_table_description(cursor, table_name)
-            for column_info in table_description:
-                column = {
-                    'name': column_info.name,
-                    'type': column_info.type_code,
-                    'pk': column_info.pk,
-                }
-                columns.append(column)
-                
-            table = {
-                'name': table_name,
-                'columns': columns,
+        table_description = connection.introspection.get_table_description(cursor, table_name)
+        for column_info in table_description:
+            column = {
+                'name': column_info.name,
+                'type': connection.introspection.get_field_type(column_info.type_code, column_info),
+                'pk': column_info.name == primary_key,
             }
-            tables.append(table)
+            columns.append(column)
+
+        table = {
+            'name': table_name,
+            'columns': columns,
+        }
+        tables.append(table)
+    cursor.close()
     return tables
