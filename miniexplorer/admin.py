@@ -1,9 +1,13 @@
+import json
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.html import mark_safe
+from django.http import JsonResponse
+from django.urls import path
 
 from .models import Query
+
 
 @admin.register(Query)
 class QueryAdmin(admin.ModelAdmin):
@@ -12,20 +16,40 @@ class QueryAdmin(admin.ModelAdmin):
     list_display = ("title", "get_result")
 
     fieldsets = (
-        (None, {
-            "fields": (
-                ("title", ),
-                ("sql", ),
-            ),
-        }),
-        ('Data Base Schema', {
-            'classes': ('collapse',),
-            'fields': ("schema",),
-        }),
+        (
+            None,
+            {
+                "fields": (("title",),),
+            },
+        ),
+        (
+            "Data Base Schema",
+            {
+                "classes": ("collapse",),
+                "fields": ("schema",),
+            },
+        ),
+        (
+            None,
+            {
+                "fields": (("sql",),),
+            },
+        ),
     )
-    readonly_fields = ('schema', )
+    readonly_fields = ("schema",)
 
     change_form_template = "admin/miniexplorer/query/change_form.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        execute_url = [
+            path(
+                "execute/",
+                self.execute_sql_view,
+                name="execute_sql",
+            ),
+        ]
+        return execute_url + urls
 
     def get_result(self, obj):
         results = obj.execute()
@@ -33,36 +57,62 @@ class QueryAdmin(admin.ModelAdmin):
         if number_of_rows == 1:
             number_of_cols = len(results[0]._fields)
             if number_of_cols == 1:
-                return mark_safe(f'<strong>{results[0][0]}</strong>')
+                return mark_safe(f"<strong>{results[0][0]}</strong>")
             else:
                 return mark_safe("")
-        return mark_safe('')
-    get_result.short_description = 'Result'
+        return mark_safe("")
 
-    def change_view(self, request, object_id, form_url="", extra_context=None):
-        extra_context = extra_context or {}
-        query = get_object_or_404(Query, pk=object_id)
+    get_result.short_description = "Result"
 
-        time = timezone.now()
-        results = query.execute()
-        fields = results[0]._fields or []
+    def execute_sql_view(self, request):
+        try:
+            data = json.loads(request.body)
+            context = {}
+            query = Query()
+            query.sql = data["sql"]
 
-        extra_context["results"] = results
-        extra_context["fields"] = fields
-        extra_context["last_time"] = time
+            time = timezone.now()
+            results = query.execute()
+            delta_time = timezone.now() - time
 
-        return super().change_view(
-            request,
-            object_id,
-            form_url,
-            extra_context=extra_context,
-        )
+            fields = results[0]._fields or []
+
+            context["results"] = results
+            context["fields"] = fields
+            context["last_time"] = time
+            context["delta_time"] = delta_time.total_seconds()
+
+            return JsonResponse(context)
+
+        except json.JSONDecodeError as e:
+            return JsonResponse(
+                {
+                    "error": "JSONDecodeError:",
+                    "msg": "Invalid JSON Payload",
+                }
+            )
+        except TypeError as e:
+            return JsonResponse(
+                {
+                    "error": "TypeError:",
+                    "msg": "SQL type error",
+                }
+            )
+        except Exception as e:
+            return JsonResponse(
+                {
+                    "error": str(e.__class__),
+                    "msg": str(e),
+                }
+            )
 
     class Media:
-        css = {"all": (
-            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.css",
-            "miniexplorer.css",
-        )}
+        css = {
+            "all": (
+                "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.css",
+                "miniexplorer.css",
+            )
+        }
         js = (
             "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.js",
             "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/mode/sql/sql.min.js",

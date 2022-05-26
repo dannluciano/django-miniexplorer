@@ -29,6 +29,7 @@ class Query(models.Model):
         super().save(*args, **kwargs)
 
     def execute(self):
+        self.sql = clean_mutable_commands(self.sql)
         return raw_sql(self.sql)
 
     def schema(self):
