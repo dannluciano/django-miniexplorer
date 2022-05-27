@@ -40,3 +40,5 @@ class Query(models.Model):
         managed = True
         verbose_name = _("Query")
         verbose_name_plural = _("Queries")
+        ordering = ["title"]
+        
