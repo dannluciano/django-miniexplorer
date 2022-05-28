@@ -10,6 +10,8 @@ Mini SQL Explorer for Django Admin
 - [x] Only safe SQL queries 
 - [x] SQL querie formatting
 - [x] Show data base schema
+- [x] AJAX Queries
+- [x] Translate to English, and Brazilian Portuguese
 - [ ] Auto complete
 
 ## How to Install
