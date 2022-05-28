@@ -42,9 +42,6 @@ msgstr "Consultas"
 msgid "Results"
 msgstr "Resultados"
 
-msgid "Result"
-msgstr "Resultado"
-
 #: miniexplorer/templates/admin/miniexplorer/query/change_form.html:39
 msgid "No Result."
 msgstr "Nenhum Resultado."

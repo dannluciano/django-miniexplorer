@@ -3,8 +3,10 @@ from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.html import mark_safe
+from django.utils.translation import get_language
 from django.http import JsonResponse
-from django.urls import path
+from django.urls import path, reverse
+from django.utils.translation import gettext as _
 
 from .models import Query
 
@@ -62,7 +64,7 @@ class QueryAdmin(admin.ModelAdmin):
                 return mark_safe("")
         return mark_safe("")
 
-    get_result.short_description = "Result"
+    get_result.short_description = _("Result")
 
     def execute_sql_view(self, request):
         try:
@@ -81,6 +83,7 @@ class QueryAdmin(admin.ModelAdmin):
             context["fields"] = fields
             context["last_time"] = time
             context["delta_time"] = delta_time.total_seconds()
+            context["current_language"] = get_language()
 
             return JsonResponse(context)
 
