@@ -8,15 +8,17 @@ const LANGUAGE_DICT = {
     Format: 'Format',
     'Return ': 'Return ',
     ' rows, ': ' rows, ',
-    'Last execution has ': 'Last execution has '
+    'Last execution has ': 'Last execution has ',
+    ' seconds': ' seconds'
   },
-  'pt-BR': {
+  'pt-br': {
     Run: 'Executar',
     ' in ': ' em ',
     Format: 'Formatar',
     'Return ': 'Retornou ',
     ' rows, ': ' linhas, ',
-    'Last execution has ': 'Última execução em '
+    'Last execution has ': 'Última execução em ',
+    ' seconds': ' segundos'
   }
 }
 
@@ -28,8 +30,8 @@ function Translator (lang) {
 
 django.jQuery(
   function () {
-    const current_language = document.querySelector('html').lang || 'en'
-    const translate = Translator(current_language)
+    const currentLanguage = document.querySelector('html').lang.toLowerCase() || 'en'
+    const translate = Translator(currentLanguage)
     const textarea = document.getElementById('id_sql')
     if (textarea) {
       const editor = CodeMirror.fromTextArea(
@@ -114,14 +116,13 @@ django.jQuery(
             table.appendChild(tbody)
 
             const lastTime = new Date(data.last_time)
-            const datetimeFormatter = new Intl.DateTimeFormat(data.current_language, { dateStyle: 'short', timeStyle: 'short' })
+            const datetimeFormatter = new Intl.DateTimeFormat(currentLanguage, { dateStyle: 'short', timeStyle: 'short' })
 
             const paginator = document.querySelector('.paginator')
             paginator.textContent = translate('Return ')
             paginator.textContent += data.results.length + translate(' rows, ')
             paginator.textContent += translate('Last execution has ') + datetimeFormatter.format(lastTime)
-            // paginator.textContent += 'Last Execution ' + Date.parse(lastTime).toString()
-            paginator.textContent += translate(' in ') + data.delta_time + gettext(' seconds')
+            paginator.textContent += translate(' in ') + data.delta_time + translate(' seconds')
           }).catch(function (error) {
             console.error(error)
           })
