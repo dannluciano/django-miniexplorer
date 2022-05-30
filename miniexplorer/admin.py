@@ -9,6 +9,7 @@ from django.urls import path, reverse
 from django.utils.translation import gettext as _
 
 from .models import Query
+from .utils import get_database_schema_for_autocomplete
 
 
 @admin.register(Query)
@@ -50,6 +51,11 @@ class QueryAdmin(admin.ModelAdmin):
                 self.execute_sql_view,
                 name="execute_sql",
             ),
+            path(
+                "database_schema/",
+                self.get_database_schema,
+                name="get_database_schema",
+            ),
         ]
         return execute_url + urls
 
@@ -66,6 +72,10 @@ class QueryAdmin(admin.ModelAdmin):
 
     get_result.short_description = _("Result")
 
+    def get_database_schema(self, request):
+        schema = get_database_schema_for_autocomplete()
+        return JsonResponse(schema, safe=False)
+
     def execute_sql_view(self, request):
         try:
             data = json.loads(request.body)
@@ -77,13 +87,14 @@ class QueryAdmin(admin.ModelAdmin):
             results = query.execute()
             delta_time = timezone.now() - time
 
-            fields = results[0]._fields or []
+            fields = []
+            if len(results) >= 1:
+                fields = results[0]._fields
 
             context["results"] = results
             context["fields"] = fields
             context["last_time"] = time
             context["delta_time"] = delta_time.total_seconds()
-            context["current_language"] = get_language()
 
             return JsonResponse(context)
 
@@ -113,13 +124,15 @@ class QueryAdmin(admin.ModelAdmin):
         css = {
             "all": (
                 "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.css",
+                "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/addon/hint/show-hint.css",
                 "miniexplorer.css",
             )
         }
         js = (
             "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.js",
             "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/mode/sql/sql.min.js",
-            "https://codemirror.net/addon/display/panel.js",
+            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/addon/hint/show-hint.js",
+            "https://codemirror.net/addon/hint/sql-hint.js",
             "https://unpkg.com/sql-formatter@4.0.2/dist/sql-formatter.min.js",
             "miniexplorer.js",
         )
