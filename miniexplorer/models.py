@@ -1,14 +1,13 @@
 import uuid
 
 from django.db import models
-from django.utils.translation import gettext as _
 from django.template.loader import render_to_string
+from django.utils.translation import gettext as _
 
-from .utils import raw_sql, clean_mutable_commands, get_database_schema
+from .utils import clean_mutable_commands, get_database_schema, raw_sql
 
 
 class Query(models.Model):
-
     uuid = models.UUIDField(
         _("uuid"),
         editable=False,
@@ -33,12 +32,13 @@ class Query(models.Model):
         return raw_sql(self.sql)
 
     def schema(self):
-        schema=get_database_schema()
-        return render_to_string('schema_table.html', {'db_schema': schema})
+        schema = get_database_schema()
+        return render_to_string("schema_table.html", {"db_schema": schema})
+
+    schema.short_description = _("Schema")
 
     class Meta:
         managed = True
         verbose_name = _("Query")
         verbose_name_plural = _("Queries")
         ordering = ["title"]
-        

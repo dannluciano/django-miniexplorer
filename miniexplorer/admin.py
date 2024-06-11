@@ -1,11 +1,10 @@
 import json
+
 from django.contrib import admin
-from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.urls import path
 from django.utils import timezone
 from django.utils.html import mark_safe
-from django.utils.translation import get_language
-from django.http import JsonResponse
-from django.urls import path, reverse
 from django.utils.translation import gettext as _
 
 from .models import Query
@@ -14,7 +13,6 @@ from .utils import get_database_schema_for_autocomplete
 
 @admin.register(Query)
 class QueryAdmin(admin.ModelAdmin):
-
     search_fields = ("title", "uuid")
     list_display = ("title", "get_result")
 
@@ -26,15 +24,16 @@ class QueryAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "Data Base Schema",
+            _("Data Base Schema"),
             {
                 "classes": ("collapse",),
                 "fields": ("schema",),
             },
         ),
         (
-            None,
+            _("Query"),
             {
+                "classes": ("collapse",),
                 "fields": (("sql",),),
             },
         ),
@@ -98,14 +97,14 @@ class QueryAdmin(admin.ModelAdmin):
 
             return JsonResponse(context)
 
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError:
             return JsonResponse(
                 {
                     "error": "JSONDecodeError:",
                     "msg": "Invalid JSON Payload",
                 }
             )
-        except TypeError as e:
+        except TypeError:
             return JsonResponse(
                 {
                     "error": "TypeError:",
@@ -123,16 +122,16 @@ class QueryAdmin(admin.ModelAdmin):
     class Media:
         css = {
             "all": (
-                "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.css",
-                "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/addon/hint/show-hint.css",
+                "https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.css",
+                "https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/hint/show-hint.css",
                 "miniexplorer.css",
             )
         }
         js = (
-            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/lib/codemirror.min.js",
-            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/mode/sql/sql.min.js",
-            "https://cdn.jsdelivr.net/npm/codemirror@5.59.2/addon/hint/show-hint.js",
-            "https://codemirror.net/addon/hint/sql-hint.js",
-            "https://unpkg.com/sql-formatter@4.0.2/dist/sql-formatter.min.js",
+            "https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.js",
+            "https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/sql/sql.min.js",
+            "https://cdn.jsdelivr.net/npm/codemirror@5.65.16/addon/hint/show-hint.js",
+            "https://codemirror.net/5/addon/hint/sql-hint.js",
+            "https://unpkg.com/sql-formatter@15.3.1/dist/sql-formatter.min.js",
             "miniexplorer.js",
         )

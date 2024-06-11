@@ -4,10 +4,9 @@
 # execute as if running in a Django server.
 
 import os
+
 import django
-
 from django.conf import settings
-
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "miniexplorer"))
 
